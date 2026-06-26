@@ -2,15 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Background */
+  --color-bg: #f8fbff;
+  --color-bg-alt: #eef4fc;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f0f6ff;
+  --color-surface-glass: rgba(255, 255, 255, 0.65);
+
+  /* Primary */
+  --color-primary: #7ec8e3;
+  --color-primary-soft: #b5dfee;
+  --color-primary-deep: #4ba3c7;
+  --color-primary-muted: rgba(126, 200, 227, 0.12);
+
+  /* Accent Colors */
+  --color-accent-rose: #f4a7bb;
+  --color-accent-lavender: #c3b1e1;
+  --color-accent-mint: #a8e6cf;
+  --color-accent-peach: #ffdab9;
+  --color-accent-lemon: #fff3b0;
+  --color-accent-lilac: #d4a5e5;
+  --color-accent-coral: #ffb5a7;
+  --color-accent-sky: #a7d8f0;
+
+  /* Text */
+  --color-text-primary: #2d3748;
+  --color-text-secondary: #718096;
+  --color-text-tertiary: #a0aec0;
+  --color-text-heading: #1a202c;
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-light: #edf2f7;
+  --color-border-accent: rgba(126, 200, 227, 0.3);
+
+  /* Shadows */
+  --color-shadow: rgba(126, 200, 227, 0.08);
+
+  /* Member Colors */
+  --color-member-jiwoo: #f4a7bb;
+  --color-member-carmen: #ffdab9;
+  --color-member-yuha: #c3b1e1;
+  --color-member-stella: #ffb5a7;
+  --color-member-juun: #a8e6cf;
+  --color-member-ana: #fff3b0;
+  --color-member-ian: #a7d8f0;
+  --color-member-yeon: #d4a5e5;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px var(--color-shadow);
+  --shadow-md: 0 4px 12px var(--color-shadow);
+  --shadow-lg:
+    0 8px 24px var(--color-shadow),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-xl:
+    0 16px 48px var(--color-shadow),
+    0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-glow:
+    0 0 20px rgba(126, 200, 227, 0.15),
+    0 0 40px rgba(126, 200, 227, 0.05);
+  --shadow-card:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 0 0 1px var(--color-border-light);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Fredoka", sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  text-transform: lowercase;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.preserve-case {
+  text-transform: none;
+}
+
 /* Hide scrollbar globally */
 * {
   -ms-overflow-style: none;
-  /* IE and Edge */
   scrollbar-width: none;
-  /* Firefox */
 }
 
 *::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari, Opera */
 }

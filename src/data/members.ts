@@ -1,0 +1,68 @@
+import type { Member } from "../types";
+
+export const members: Member[] = [
+    {
+        name: "Jiwoo",
+        emoji: "🍓",
+        slug: "jiwoo",
+        color: "var(--color-member-jiwoo)",
+        colorHex: "#F4A7BB",
+        description: "leader, dancer, visual. shy but disciplined. former ballerina.",
+    },
+    {
+        name: "Carmen",
+        emoji: "🌴",
+        slug: "carmen",
+        color: "var(--color-member-carmen)",
+        colorHex: "#FFDAB9",
+        description: "main vocalist. indonesian. the sunshine and happy virus.",
+    },
+    {
+        name: "Yuha",
+        emoji: "🎀",
+        slug: "yuha",
+        color: "var(--color-member-yuha)",
+        colorHex: "#C3B1E1",
+        description: "all-rounder. disney fan. perfect pitch. has a twin sister.",
+    },
+    {
+        name: "Stella",
+        emoji: "🧁",
+        slug: "stella",
+        color: "var(--color-member-stella)",
+        colorHex: "#FFB5A7",
+        description: "korean-canadian. enfp. plays guitar, drums, and piano.",
+    },
+    {
+        name: "Juun",
+        emoji: "👾",
+        slug: "juun",
+        color: "var(--color-member-juun)",
+        colorHex: "#A8E6CF",
+        description: "super cutie. husky voice. huge boa fan.",
+    },
+    {
+        name: "A-Na",
+        emoji: "🌻",
+        slug: "a-na",
+        color: "var(--color-member-ana)",
+        colorHex: "#FFF3B0",
+        description: "firecracker. loves pastels. tallest member. anime fan.",
+    },
+    {
+        name: "Ian",
+        emoji: "🫛",
+        slug: "ian",
+        color: "var(--color-member-ian)",
+        colorHex: "#A7D8F0",
+        description: "scouted via instagram. former kid model. natural charm.",
+    },
+    {
+        name: "Ye-On",
+        emoji: "😊",
+        slug: "ye-on",
+        color: "var(--color-member-yeon)",
+        colorHex: "#D4A5E5",
+        description: "youngest. musical theater background. most active in the group chat.",
+    },
+];

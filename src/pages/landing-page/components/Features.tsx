@@ -1,5 +1,3 @@
-// src/pages/landing-page/components/Features.tsx
-
 import Reveal from "../../../components/ui/Reveal";
 
 // ─── icons ───────────────────────────────────────────────────────────────────

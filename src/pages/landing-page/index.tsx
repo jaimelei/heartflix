@@ -4,6 +4,7 @@ import Footer from "../../components/layout/Footer";
 import Features from "./components/Features";
 import Hero from "./components/Hero";
 import LandingNavbar from "./components/LandingNavbar";
+import MembersShowcase from "./components/MembersShowcase";
 
 export default function HomePage() {
     return (
@@ -13,6 +14,7 @@ export default function HomePage() {
             <main>
                 <Hero />
                 <Features />
+                <MembersShowcase />
             </main>
 
             <Footer />

@@ -5,6 +5,7 @@ import Features from "./components/Features";
 import Hero from "./components/Hero";
 import LandingNavbar from "./components/LandingNavbar";
 import MembersShowcase from "./components/MembersShowcase";
+import PlatformPreview from "./components/PlatformPreview";
 
 export default function HomePage() {
     return (
@@ -15,6 +16,7 @@ export default function HomePage() {
                 <Hero />
                 <Features />
                 <MembersShowcase />
+                <PlatformPreview />
             </main>
 
             <Footer />

@@ -9,54 +9,72 @@ interface MemberCardProps {
 
 function MemberCard({ member, index }: MemberCardProps) {
     const [hovered, setHovered] = useState(false);
+    const [imgError, setImgError] = useState(false);
 
     return (
         <Reveal direction="up" delay={index < 5 ? index * 50 : 0}>
             <div
                 className="shrink-0 cursor-pointer"
-                style={{ width: "280px" }}
+                style={{ width: "290px" }}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
             >
                 <div
                     style={{
-                        width: "280px",
-                        height: "420px",
+                        width: "290px",
+                        height: "440px",
                         borderRadius: "1.5rem",
                         overflow: "hidden",
                         background: "var(--color-surface)",
-                        border: `1px solid ${hovered ? `${member.colorHex}40` : "var(--color-border)"}`,
-                        boxShadow: hovered ? "var(--shadow-lg)" : "var(--shadow-card)",
+                        border: `1px solid ${hovered ? `${member.colorHex}50` : "var(--color-border)"}`,
+                        boxShadow: hovered
+                            ? `0 10px 25px -5px ${member.colorHex}25, 0 8px 16px -6px ${member.colorHex}25`
+                            : "var(--shadow-card)",
                         transform: hovered ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)",
-                        transition: "all 500ms ease-out",
+                        transition: "all 400ms cubic-bezier(0.16, 1, 0.3, 1)",
                         display: "flex",
                         flexDirection: "column",
                     }}
                 >
-                    {/* top area — 60% */}
+                    {/* top area — 60% — photo */}
                     <div
                         className="relative overflow-hidden"
                         style={{
                             height: "60%",
                             background: `linear-gradient(135deg, ${member.colorHex}, ${member.colorHex}88)`,
-                            filter: hovered ? "brightness(1.07)" : "brightness(1)",
-                            transition: "filter 700ms ease-out",
                         }}
                     >
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div
-                                className="flex items-center justify-center"
+                        {member.imageUrl && !imgError ? (
+                            <img
+                                src={member.imageUrl}
+                                alt={member.name}
+                                onError={() => setImgError(true)}
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700"
                                 style={{
-                                    width: "96px",
-                                    height: "96px",
-                                    borderRadius: "9999px",
-                                    background: "rgba(255,255,255,0.6)",
-                                    fontSize: "2.75rem",
+                                    transform: hovered ? "scale(1.08)" : "scale(1)",
+                                }}
+                            />
+                        ) : (
+                            <div
+                                className="absolute inset-0 flex items-center justify-center transition-transform duration-700"
+                                style={{
+                                    transform: hovered ? "scale(1.08)" : "scale(1)",
                                 }}
                             >
-                                {member.emoji}
+                                <div
+                                    className="flex items-center justify-center shadow-sm"
+                                    style={{
+                                        width: "96px",
+                                        height: "96px",
+                                        borderRadius: "9999px",
+                                        background: "rgba(255,255,255,0.6)",
+                                        fontSize: "2.75rem",
+                                    }}
+                                >
+                                    {member.emoji}
+                                </div>
                             </div>
-                        </div>
+                        )}
                         <div
                             className="absolute inset-x-0 bottom-0"
                             style={{
@@ -72,31 +90,91 @@ function MemberCard({ member, index }: MemberCardProps) {
                         style={{ flex: 1, padding: "1.25rem" }}
                     >
                         <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span
-                                    className="preserve-case"
-                                    style={{
-                                        fontFamily: '"Fredoka", sans-serif',
-                                        fontWeight: 700,
-                                        fontSize: "1.25rem",
-                                        color: "var(--color-text-heading)",
-                                    }}
-                                >
-                                    {member.name}
-                                </span>
-                                <span style={{ fontSize: "1.125rem" }}>{member.emoji}</span>
-                            </div>
+                            {/* stage name (gasoek) */}
+                            <h3
+                                className="preserve-case transition-colors duration-300"
+                                style={{
+                                    fontFamily: '"Gasoek One", sans-serif',
+                                    fontSize: "1.5rem",
+                                    lineHeight: "1.2",
+                                    color: hovered ? member.colorHex : "var(--color-text-heading)",
+                                }}
+                            >
+                                {member.name}
+                            </h3>
+
+                            {/* full birth name */}
                             <p
-                                className="line-clamp-2 leading-relaxed"
+                                className="preserve-case mt-1"
                                 style={{
                                     fontFamily: '"Fredoka", sans-serif',
                                     fontWeight: 400,
-                                    fontSize: "0.75rem",
-                                    color: "var(--color-text-secondary)",
+                                    fontSize: "0.8125rem",
+                                    color: "var(--color-text-tertiary)",
+                                }}
+                            >
+                                {member.fullName}
+                            </p>
+
+                            {/* role / description */}
+                            <p
+                                className="preserve-case mt-1.5 uppercase tracking-wider"
+                                style={{
+                                    fontFamily: '"Fredoka", sans-serif',
+                                    fontWeight: 600,
+                                    fontSize: "0.6875rem",
+                                    letterSpacing: "0.06em",
+                                    color: hovered ? member.colorHex : "var(--color-text-secondary)",
                                 }}
                             >
                                 {member.description}
                             </p>
+                        </div>
+
+                        {/* stats row (birthday, birthplace, mbti) */}
+                        <div
+                            className="grid grid-cols-3 gap-1 pt-3"
+                            style={{ borderTop: "1px solid var(--color-border-light)" }}
+                        >
+                            <div className="flex flex-col items-center">
+                                <span
+                                    className="preserve-case font-semibold text-xs text-center"
+                                    style={{ color: "var(--color-text-primary)" }}
+                                >
+                                    {(() => {
+                                        const birthDate = new Date(member.birthday);
+                                        const today = new Date();
+                                        let age = today.getFullYear() - birthDate.getFullYear();
+                                        const m = today.getMonth() - birthDate.getMonth();
+                                        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                                            age--;
+                                        }
+                                        return isNaN(age) ? member.birthday : age;
+                                    })()}
+                                </span>
+                                <span className="text-[9px] uppercase tracking-wider text-[var(--color-text-tertiary)] mt-0.5">age</span>
+                            </div>
+                            <div
+                                className="flex flex-col items-center"
+                                style={{ borderLeft: "1px solid var(--color-border-light)", borderRight: "1px solid var(--color-border-light)" }}
+                            >
+                                <span
+                                    className="preserve-case font-semibold text-xs text-center truncate w-full px-1"
+                                    style={{ color: "var(--color-text-primary)" }}
+                                >
+                                    {member.height}
+                                </span>
+                                <span className="text-[9px] uppercase tracking-wider text-[var(--color-text-tertiary)] mt-0.5">from</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <span
+                                    className="preserve-case font-semibold text-xs text-center"
+                                    style={{ color: "var(--color-text-primary)" }}
+                                >
+                                    {member.mbti}
+                                </span>
+                                <span className="text-[9px] uppercase tracking-wider text-[var(--color-text-tertiary)] mt-0.5">mbti</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -118,7 +196,6 @@ export default function MembersShowcase() {
     const [isHovered, setIsHovered] = useState(false);
     const [inView, setInView] = useState(false);
 
-    // doubled list for seamless loop
     const loopMembers = [...members, ...members];
 
     const updateScrollState = () => {
@@ -128,7 +205,6 @@ export default function MembersShowcase() {
         setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
     };
 
-    // intersection observer
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => setInView(entry.isIntersecting),
@@ -138,7 +214,6 @@ export default function MembersShowcase() {
         return () => observer.disconnect();
     }, []);
 
-    // auto-scroll loop
     useEffect(() => {
         const clear = () => {
             if (timerRef.current) clearTimeout(timerRef.current);
@@ -154,8 +229,6 @@ export default function MembersShowcase() {
             const el = scrollRef.current;
             if (!el) return;
 
-            // when we've scrolled past the halfway point, silently
-            // jump back by exactly half — same visual position, no flash
             const half = el.scrollWidth / 2;
             if (el.scrollLeft >= half) {
                 el.scrollLeft = el.scrollLeft - half;
@@ -180,9 +253,17 @@ export default function MembersShowcase() {
     };
 
     return (
-        <section ref={sectionRef} className="py-16 relative overflow-hidden">
-
-            {/* background watermark */}
+        <section
+            ref={sectionRef}
+            className="py-16 relative overflow-hidden"
+            style={{
+                background: `
+                    radial-gradient(ellipse 60% 50% at 20% 40%, rgba(168,230,207,0.10) 0%, transparent 50%),
+                    radial-gradient(ellipse 50% 60% at 80% 60%, rgba(244,167,187,0.08) 0%, transparent 50%),
+                    var(--color-bg)
+                `,
+            }}
+        >
             <div
                 aria-hidden="true"
                 className="absolute inset-0 flex justify-center items-center pointer-events-none select-none overflow-hidden"
@@ -203,7 +284,6 @@ export default function MembersShowcase() {
                 </span>
             </div>
 
-            {/* section header */}
             <div
                 className="relative z-10 flex flex-col items-center text-center gap-4"
                 style={{ maxWidth: "80%", margin: "0 auto 3rem" }}
@@ -262,14 +342,12 @@ export default function MembersShowcase() {
                 </Reveal>
             </div>
 
-            {/* carousel wrapper — full viewport width */}
             <div
                 className="relative z-10"
                 style={{ width: "100vw", position: "relative", left: "50%", marginLeft: "-50vw" }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
-                {/* left gradient + arrow */}
                 <div
                     className="absolute left-0 top-0 bottom-8 flex items-center z-20 pointer-events-none"
                     style={{
@@ -280,7 +358,7 @@ export default function MembersShowcase() {
                     }}
                 >
                     <button
-                        className="pointer-events-auto ml-4 flex items-center justify-center"
+                        className="pointer-events-auto ml-12 flex items-center justify-center"
                         style={{
                             width: "48px",
                             height: "48px",
@@ -311,7 +389,6 @@ export default function MembersShowcase() {
                     </button>
                 </div>
 
-                {/* right gradient + arrow */}
                 <div
                     className="absolute right-0 top-0 bottom-8 flex items-center justify-end z-20 pointer-events-none"
                     style={{
@@ -322,7 +399,7 @@ export default function MembersShowcase() {
                     }}
                 >
                     <button
-                        className="pointer-events-auto mr-4 flex items-center justify-center"
+                        className="pointer-events-auto mr-12 flex items-center justify-center"
                         style={{
                             width: "48px",
                             height: "48px",
@@ -353,7 +430,6 @@ export default function MembersShowcase() {
                     </button>
                 </div>
 
-                {/* scroll track — NO snap, NO scroll-smooth (both break the silent reset) */}
                 <div
                     ref={scrollRef}
                     className="flex gap-6 overflow-x-auto"

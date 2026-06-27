@@ -223,7 +223,10 @@ export default function PlatformPreview() {
                 style={{ maxWidth: "80%" }}
             >
                 {/* left — coming soon placeholder */}
-                <div className="order-2 lg:order-1">
+                <div
+                    className="order-2 lg:order-1 max-h-[460px] overflow-hidden rounded-[2.5rem] shadow-md flex items-center justify-center"
+                    style={{ border: "1px solid var(--color-border-accent)" }}
+                >
                     <Reveal direction="left">
                         <ComingSoon />
                     </Reveal>
@@ -282,7 +285,7 @@ export default function PlatformPreview() {
                     {/* feature list */}
                     <div className="flex flex-col gap-5">
                         {FEATURES.map((feature, i) => (
-                            <Reveal key={feature.title} direction="up" delay={i * 100}>
+                            <Reveal key={feature.title} direction="up" delay={400 + i * 100}>
                                 <div className="flex items-start gap-4">
                                     {/* icon box */}
                                     <div

@@ -5,21 +5,28 @@ import { Link } from "react-router-dom";
 import Reveal from "../../../components/ui/Reveal";
 import { getDaysRunning } from "../../../constants";
 
-// ─── decorative dots ────────────────────────────────────────────────────────
+// ─── decorative dots / particles ─────────────────────────────────────────────
 
 const MEMBER_COLORS = [
     "#F4A7BB", "#FFDAB9", "#C3B1E1", "#FFB5A7",
     "#A8E6CF", "#FFF3B0", "#A7D8F0", "#D4A5E5",
 ];
 
-const DOTS = Array.from({ length: 14 }, (_, i) => ({
-    color: MEMBER_COLORS[i % MEMBER_COLORS.length],
-    size: 8 + Math.floor(((i * 37) % 13)),          // 8–20px, deterministic
-    top: `${5 + ((i * 17 + 11) % 85)}%`,
-    left: `${3 + ((i * 23 + 7) % 90)}%`,
-    delay: `${((i * 0.23) % 3).toFixed(2)}s`,
-    duration: `${(2.5 + ((i * 0.19) % 1.5)).toFixed(2)}s`,
-}));
+// Re-generate a richer list of particles
+const PARTICLE_COUNT = 24;
+const DOTS = Array.from({ length: PARTICLE_COUNT }, (_, i) => {
+    const isBig = i % 4 === 0;
+    return {
+        color: MEMBER_COLORS[i % MEMBER_COLORS.length],
+        size: isBig ? 18 + ((i * 7) % 11) : 4 + ((i * 13) % 9), // 4-12px or 18-28px
+        top: `${5 + ((i * 19 + 7) % 85)}%`,
+        left: `${2 + ((i * 17 + 13) % 96)}%`,
+        delay: `${((i * 0.17) % 3).toFixed(2)}s`,
+        duration: `${(3.0 + ((i * 0.23) % 4.0)).toFixed(2)}s`,
+        isRing: i % 5 === 0,
+        isBig,
+    };
+});
 
 // ─── fake video card data ────────────────────────────────────────────────────
 
@@ -28,7 +35,7 @@ const FAKE_CARDS = [
         gradient: "linear-gradient(135deg, #B5DFEE 0%, #D4A5E5 100%)",
         title: "hearts2hearts 1st mini album showcase",
         duration: "1:24:03",
-        tags: ["🍓", "🌴", "🐰"],
+        tags: ["🍓", "🌴", "🎀"],
         rotation: "rotate-[-2deg]",
         offset: { x: "left-1/2 -translate-x-1/2", y: "top-[10%]" },
         zIndex: 30,
@@ -50,7 +57,7 @@ const FAKE_CARDS = [
         gradient: "linear-gradient(135deg, #FFF3B0 0%, #FFDAB9 100%)",
         title: "hearts2hearts — 'bloom' mv (official)",
         duration: "3:52",
-        tags: ["🌴", "🐰", "🧁", "🍓"],
+        tags: ["🌴", "🎀", "🧁", "🍓"],
         rotation: "rotate-[-6deg]",
         offset: { x: "right-[2%]", y: "top-[30%]" },
         zIndex: 10,
@@ -150,25 +157,27 @@ export default function Hero() {
     const sectionRef = useRef<HTMLElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const watermarkRef = useRef<HTMLDivElement>(null);
+    const blobRef = useRef<HTMLDivElement>(null);
     const rafRef = useRef<number>(0);
 
     const [mouseX, setMouseX] = useState(0);
     const [mouseY, setMouseY] = useState(0);
     const [ctaHovered, setCtaHovered] = useState(false);
 
-    // rAF-based scroll parallax (no state — direct DOM manipulation for perf)
+    // rAF-based scroll parallax
     useEffect(() => {
         const handleScroll = () => {
             rafRef.current = requestAnimationFrame(() => {
                 const scrollY = window.scrollY;
-                const opacity = Math.max(1 - scrollY / 500, 0);
+                const contentOpacity = Math.max(1 - scrollY / 450, 0);
+                const blobOpacity = Math.max(1 - scrollY / 600, 0);
 
                 if (contentRef.current) {
-                    contentRef.current.style.opacity = String(opacity);
-                    contentRef.current.style.transform = `translateY(-${scrollY * 0.15}px)`;
+                    contentRef.current.style.opacity = String(contentOpacity);
+                    contentRef.current.style.transform = `translateY(-${scrollY * 0.3}px)`;
                 }
-                if (watermarkRef.current) {
-                    watermarkRef.current.style.transform = `translateX(-50%) translateY(-${scrollY * 0.35}px)`;
+                if (blobRef.current) {
+                    blobRef.current.style.opacity = String(blobOpacity);
                 }
             });
         };
@@ -196,30 +205,101 @@ export default function Hero() {
     return (
         <section
             ref={sectionRef}
-            className="relative h-screen flex items-center overflow-hidden py-16"
-            style={{ background: "var(--color-bg)" }}
+            className="relative min-h-screen flex items-center overflow-hidden py-16"
+            style={{
+                background: `
+                    radial-gradient(ellipse 80% 60% at 15% 20%, rgba(126,200,227,0.15) 0%, transparent 60%),
+                    radial-gradient(ellipse 60% 80% at 85% 30%, rgba(196,177,225,0.12) 0%, transparent 55%),
+                    radial-gradient(ellipse 70% 50% at 50% 80%, rgba(244,167,187,0.10) 0%, transparent 50%),
+                    radial-gradient(ellipse 50% 40% at 30% 60%, rgba(168,230,207,0.08) 0%, transparent 50%),
+                    var(--color-bg)
+                `,
+            }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
+            {/* keyframes for watermark fade/scale in */}
+            <style>{`
+                @keyframes watermarkFadeScale {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-50%) scale(0.92);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(-50%) scale(1);
+                    }
+                }
+            `}</style>
+
             {/* bg layer 1 — watermark */}
             <div
                 ref={watermarkRef}
                 aria-hidden="true"
-                className="absolute bottom-0 left-1/2 pointer-events-none select-none whitespace-nowrap"
+                className="absolute bottom-6 left-1/2 pointer-events-none select-none whitespace-nowrap"
                 style={{
-                    transform: "translateX(-50%)",
                     fontFamily: '"Gasoek One", sans-serif',
                     fontSize: "clamp(8rem, 18vw, 22rem)",
                     lineHeight: 1,
                     color: "transparent",
-                    WebkitTextStroke: `4px rgba(126,200,227,0.06)`,
+                    WebkitTextStroke: `4px rgba(126,200,227,0.2)`,
                     zIndex: 0,
+                    animation: "watermarkFadeScale 1200ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: "1000ms",
                 }}
             >
                 HEARTFLIX
             </div>
 
-            {/* bg layer 2 — floating dots */}
+            {/* bg layer 2 — animated mesh glow blobs */}
+            <div ref={blobRef} className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden transition-opacity duration-300">
+                <div
+                    className="absolute rounded-full filter blur-[80px]"
+                    style={{
+                        width: "300px",
+                        height: "300px",
+                        background: "rgba(126,200,227,0.18)",
+                        top: "10%",
+                        left: "5%",
+                        animationName: "float",
+                        animationDuration: "10s",
+                        animationTimingFunction: "ease-in-out",
+                        animationIterationCount: "infinite",
+                    }}
+                />
+                <div
+                    className="absolute rounded-full filter blur-[80px]"
+                    style={{
+                        width: "250px",
+                        height: "250px",
+                        background: "rgba(196,177,225,0.15)",
+                        top: "20%",
+                        right: "10%",
+                        animationName: "float",
+                        animationDuration: "12s",
+                        animationDelay: "2s",
+                        animationTimingFunction: "ease-in-out",
+                        animationIterationCount: "infinite",
+                    }}
+                />
+                <div
+                    className="absolute rounded-full filter blur-[80px]"
+                    style={{
+                        width: "350px",
+                        height: "350px",
+                        background: "rgba(244,167,187,0.12)",
+                        bottom: "10%",
+                        left: "35%",
+                        animationName: "float",
+                        animationDuration: "8s",
+                        animationDelay: "4s",
+                        animationTimingFunction: "ease-in-out",
+                        animationIterationCount: "infinite",
+                    }}
+                />
+            </div>
+
+            {/* bg layer 3 — floating dots */}
             <Reveal direction="none" delay={1200} className="absolute inset-0 pointer-events-none select-none z-0">
                 <>
                     {DOTS.map((dot, i) => (
@@ -230,10 +310,13 @@ export default function Hero() {
                             style={{
                                 width: dot.size,
                                 height: dot.size,
-                                background: dot.color,
+                                background: dot.isRing ? "transparent" : dot.color,
+                                border: dot.isRing ? `2px solid ${dot.color}` : "none",
                                 top: dot.top,
                                 left: dot.left,
-                                opacity: 0.15,
+                                opacity: dot.isBig ? 0.35 : 0.45,
+                                filter: dot.isBig ? "none" : "blur(1px)",
+                                boxShadow: dot.isBig ? `0 0 8px 2px ${dot.color}40` : "none",
                                 animationName: "float",
                                 animationDuration: dot.duration,
                                 animationDelay: dot.delay,
@@ -246,7 +329,7 @@ export default function Hero() {
             </Reveal>
 
             {/* foreground content */}
-            <div ref={contentRef} className="relative z-10 w-full">
+            <div ref={contentRef} className="relative z-10 w-full transition-all duration-300">
                 <div className="max-w-[85%] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-8 items-center">
 
                     {/* left column — text stack */}

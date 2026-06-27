@@ -1,5 +1,3 @@
-// src/pages/landing-page/components/LandingNavbar.tsx
-
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 
@@ -26,10 +24,23 @@ export default function LandingNavbar() {
 
     return (
         <>
+            {/* keyframes for fade-down animations */}
+            <style>{`
+                @keyframes fadeDown {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-16px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `}</style>
+
             <header
-                className="top-0 left-0 right-0 z-50 h-16 flex items-center px-6 transition-all duration-500"
+                className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-6 transition-all duration-300"
                 style={{
-                    position: scrolled ? "fixed" : "absolute",
                     background: scrolled ? "var(--color-surface-glass)" : "transparent",
                     backdropFilter: scrolled ? "blur(16px) saturate(1.4)" : "none",
                     WebkitBackdropFilter: scrolled ? "blur(16px) saturate(1.4)" : "none",
@@ -37,6 +48,7 @@ export default function LandingNavbar() {
                         ? "1px solid rgba(255,255,255,0.5)"
                         : "1px solid transparent",
                     boxShadow: scrolled ? "var(--shadow-sm)" : "none",
+                    animation: "fadeDown 1500ms cubic-bezier(0.16, 1, 0.3, 1) both",
                 }}
             >
                 {/* logo */}
@@ -135,77 +147,90 @@ export default function LandingNavbar() {
                     transform: drawerOpen ? "translateX(0)" : "translateX(100%)",
                 }}
             >
-                {/* drawer header */}
-                <div className="flex items-center justify-between mb-8">
-                    <span
-                        className="text-lg"
-                        style={{
-                            color: "var(--color-primary-deep)",
-                            fontFamily: '"Gasoek One", sans-serif',
-                        }}
-                    >
-                        heartflix
-                    </span>
-                    <button
-                        onClick={() => setDrawerOpen(false)}
-                        className="w-8 h-8 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-[var(--color-bg-alt)]"
-                        aria-label="close menu"
-                    >
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                            <path
-                                d="M3 3l10 10M13 3L3 13"
-                                stroke="var(--color-text-secondary)"
-                                strokeWidth="1.6"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                    </button>
-                </div>
-
-                {/* drawer nav links */}
-                <nav className="flex flex-col gap-1 flex-1">
-                    {NAV_LINKS.map(({ label, to }) => (
-                        <NavLink
-                            key={to}
-                            to={to}
-                            end={to === "/"}
-                            onClick={() => setDrawerOpen(false)}
-                            className={({ isActive }) =>
-                                [
-                                    "px-4 py-3 rounded-xl text-base font-medium transition-all duration-200",
-                                    isActive
-                                        ? "bg-[var(--color-primary-muted)] text-[var(--color-primary-deep)]"
-                                        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-alt)]",
-                                ].join(" ")
-                            }
+                {drawerOpen && (
+                    <>
+                        {/* drawer header */}
+                        <div
+                            className="flex items-center justify-between mb-8"
+                            style={{ animation: "fadeDown 400ms cubic-bezier(0.16, 1, 0.3, 1) both", animationDelay: "50ms" }}
                         >
-                            {label}
-                        </NavLink>
-                    ))}
-                </nav>
+                            <span
+                                className="text-lg"
+                                style={{
+                                    color: "var(--color-primary-deep)",
+                                    fontFamily: '"Gasoek One", sans-serif',
+                                }}
+                            >
+                                heartflix
+                            </span>
+                            <button
+                                onClick={() => setDrawerOpen(false)}
+                                className="w-8 h-8 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-[var(--color-bg-alt)]"
+                                aria-label="close menu"
+                            >
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                    <path
+                                        d="M3 3l10 10M13 3L3 13"
+                                        stroke="var(--color-text-secondary)"
+                                        strokeWidth="1.6"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
 
-                {/* drawer view catalog CTA */}
-                <Link
-                    to="/catalog"
-                    onClick={() => setDrawerOpen(false)}
-                    className="mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-full text-sm font-semibold transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-                    style={{
-                        background: "var(--color-primary)",
-                        color: "#fff",
-                        boxShadow: "var(--shadow-md)",
-                    }}
-                >
-                    view catalog
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                        <path
-                            d="M2.5 7h9M7.5 3l4 4-4 4"
-                            stroke="currentColor"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                </Link>
+                        {/* drawer nav links */}
+                        <nav className="flex flex-col gap-1 flex-1">
+                            {NAV_LINKS.map(({ label, to }, i) => (
+                                <div
+                                    key={to}
+                                    style={{ animation: "fadeDown 400ms cubic-bezier(0.16, 1, 0.3, 1) both", animationDelay: `${120 + i * 80}ms` }}
+                                >
+                                    <NavLink
+                                        to={to}
+                                        end={to === "/"}
+                                        onClick={() => setDrawerOpen(false)}
+                                        className={({ isActive }) =>
+                                            [
+                                                "block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200",
+                                                isActive
+                                                    ? "bg-[var(--color-primary-muted)] text-[var(--color-primary-deep)]"
+                                                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-alt)]",
+                                            ].join(" ")
+                                        }
+                                    >
+                                        {label}
+                                    </NavLink>
+                                </div>
+                            ))}
+                        </nav>
+
+                        {/* drawer view catalog CTA */}
+                        <Link
+                            to="/catalog"
+                            onClick={() => setDrawerOpen(false)}
+                            className="mt-6 flex items-center justify-center gap-2 px-4 py-3 rounded-full text-sm font-semibold transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+                            style={{
+                                background: "var(--color-primary)",
+                                color: "#fff",
+                                boxShadow: "var(--shadow-md)",
+                                animation: "fadeDown 400ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                                animationDelay: `${120 + NAV_LINKS.length * 80}ms`,
+                            }}
+                        >
+                            view catalog
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                                <path
+                                    d="M2.5 7h9M7.5 3l4 4-4 4"
+                                    stroke="currentColor"
+                                    strokeWidth="1.6"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </Link>
+                    </>
+                )}
             </aside>
         </>
     );

@@ -26,7 +26,7 @@ export default function Navbar() {
     return (
         <>
             <header
-                className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-6 transition-all duration-500"
+                className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-6 transition-all duration-300"
                 style={{
                     background: scrolled
                         ? "var(--color-surface-glass)"

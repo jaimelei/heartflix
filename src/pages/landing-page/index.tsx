@@ -1,11 +1,10 @@
-// Route: /
-
 import Footer from "../../components/layout/Footer";
 import Features from "./components/Features";
 import Hero from "./components/Hero";
 import LandingNavbar from "./components/LandingNavbar";
 import MembersShowcase from "./components/MembersShowcase";
 import PlatformPreview from "./components/PlatformPreview";
+import CTA from "./components/CTA";
 
 export default function HomePage() {
     return (
@@ -17,6 +16,7 @@ export default function HomePage() {
                 <Features />
                 <MembersShowcase />
                 <PlatformPreview />
+                <CTA />
             </main>
 
             <Footer />

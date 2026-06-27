@@ -1,10 +1,15 @@
 export interface Member {
     name: string;
+    fullName: string;
     emoji: string;
     slug: string;
     color: string;
     colorHex: string;
+    birthday: string;
+    height: string;
+    mbti: string;
     description: string;
+    imageUrl: string;
 }
 
 export interface Video {

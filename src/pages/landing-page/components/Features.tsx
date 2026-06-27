@@ -74,7 +74,7 @@ const FEATURES = [
 
 export default function Features() {
     return (
-        <section className="py-16 relative">
+        <section className="py-8 relative">
             <div className="max-w-[80%] mx-auto">
                 <div
                     className="overflow-hidden"
@@ -89,7 +89,7 @@ export default function Features() {
                         {FEATURES.map((feature, index) => (
                             <Reveal key={feature.title} direction="up" delay={index * 120}>
                                 <div
-                                    className="relative p-8 lg:p-10 flex flex-col items-center gap-4 text-center"
+                                    className="relative p-4 md:p-6 flex flex-col items-center gap-1 text-center"
                                 >
                                     {/* vertical divider — not on first card, desktop only */}
                                     {index > 0 && (

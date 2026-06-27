@@ -18,6 +18,12 @@ export const SOCIAL_LINKS = {
     donation: "https://placeholder.com/donate",
 };
 
+export const OFFICIAL_LINKS = {
+    youtube: "https://www.youtube.com/@hearts2hearts",
+    instagram: "https://www.instagram.com/hearts2hearts_official",
+    tiktok: "https://www.tiktok.com/@hearts2hearts_official",
+};
+
 export function getDaysRunning(): number {
     const launch = new Date(SITE_LAUNCH_DATE);
     const now = new Date();

@@ -41,14 +41,14 @@
   --color-shadow: rgba(126, 200, 227, 0.08);
 
   /* Member Colors */
-  --color-member-jiwoo: #f4a7bb;
-  --color-member-carmen: #ffdab9;
-  --color-member-yuha: #c3b1e1;
-  --color-member-stella: #ffb5a7;
-  --color-member-juun: #a8e6cf;
-  --color-member-ana: #fff3b0;
-  --color-member-ian: #a7d8f0;
-  --color-member-yeon: #d4a5e5;
+  --color-member-jiwoo: #a2c4b4;   /* pastel deep green/sage */
+  --color-member-carmen: #f4a7bb;  /* classic pastel pink */
+  --color-member-yuha: #f8c3cd;    /* soft rose/blush pink */
+  --color-member-stella: #ffccd5;  /* light baby pink */
+  --color-member-juun: #d6c6e1;    /* soft pastel purple/lavender */
+  --color-member-ana: #ffd3b6;     /* pastel peach/coral (different from the rest) */
+  --color-member-ian: #f1f3f8;     /* pastel white-ish/silver-blue tint */
+  --color-member-yeon: #fff3b0;    /* pastel yellow */
 
   /* Radius */
   --radius-sm: 8px;

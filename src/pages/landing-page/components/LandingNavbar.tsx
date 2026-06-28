@@ -205,7 +205,7 @@ export default function LandingNavbar() {
                             ))}
                         </nav>
 
-                        {/* drawer view catalog CTA */}
+                        {/* drawer explore catalog CTA */}
                         <Link
                             to="/catalog"
                             onClick={() => setDrawerOpen(false)}
@@ -218,7 +218,7 @@ export default function LandingNavbar() {
                                 animationDelay: `${120 + NAV_LINKS.length * 80}ms`,
                             }}
                         >
-                            view catalog
+                            explore catalog
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                                 <path
                                     d="M2.5 7h9M7.5 3l4 4-4 4"

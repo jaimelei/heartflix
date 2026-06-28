@@ -69,7 +69,7 @@ export default function Navbar() {
                     ))}
                 </nav>
 
-                {/* right — view catalog CTA */}
+                {/* right — explore catalog CTA */}
                 <div className="ml-auto flex items-center gap-3">
                     <Link
                         to="/catalog"
@@ -80,7 +80,7 @@ export default function Navbar() {
                             boxShadow: "var(--shadow-md)",
                         }}
                     >
-                        view catalog
+                        explore catalog
                         <svg
                             width="14"
                             height="14"
@@ -201,7 +201,7 @@ export default function Navbar() {
                         boxShadow: "var(--shadow-md)",
                     }}
                 >
-                    view catalog
+                    explore catalog
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                         <path
                             d="M2.5 7h9M7.5 3l4 4-4 4"

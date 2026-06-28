@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import type { Playlist } from "../types";
 
-export function usePlaylists(categoryId: string) {
+export function usePlaylists(categorySlug: string) {
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!categoryId) {
+        if (!categorySlug) {
             setPlaylists([]);
             setLoading(false);
             return;
@@ -20,8 +20,13 @@ export function usePlaylists(categoryId: string) {
 
             const { data: playlistData, error: playlistError } = await supabase
                 .from("h2h_playlists")
-                .select("*")
-                .eq("category_id", categoryId)
+                .select(`
+                    *,
+                    h2h_categories!inner (
+                        slug
+                    )
+                `)
+                .eq("h2h_categories.slug", categorySlug)
                 .order("sort_order", { ascending: true });
 
             if (playlistError) {
@@ -50,7 +55,7 @@ export function usePlaylists(categoryId: string) {
         }
 
         fetchPlaylists();
-    }, [categoryId]);
+    }, [categorySlug]);
 
     return {
         playlists,

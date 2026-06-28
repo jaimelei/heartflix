@@ -7,12 +7,14 @@ export function useVideos(
     season?: number,
 ) {
     const [videos, setVideos] = useState<Video[]>([]);
+    const [playlistName, setPlaylistName] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!playlistId) {
             setVideos([]);
+            setPlaylistName("");
             setLoading(false);
             return;
         }
@@ -21,6 +23,24 @@ export function useVideos(
             setLoading(true);
             setError(null);
 
+            // Fetch playlist name
+            const { data: playlist, error: playlistError } = await supabase
+                .from("h2h_playlists")
+                .select("name")
+                .eq("id", playlistId)
+                .single();
+
+            if (playlistError) {
+                setError(playlistError.message);
+                setPlaylistName("");
+                setVideos([]);
+                setLoading(false);
+                return;
+            }
+
+            setPlaylistName(playlist.name);
+
+            // Fetch videos
             let query = supabase
                 .from("h2h_videos")
                 .select("*")
@@ -49,6 +69,7 @@ export function useVideos(
 
     return {
         videos,
+        playlistName,
         loading,
         error,
     };

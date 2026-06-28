@@ -18,7 +18,7 @@ export interface Video {
     title_en: string;
     title_ko: string | null;
     duration: string | null;
-    thumbnail_url: string | null;
+    thumbnail_url: string;
     upload_date: string | null;
     playlist_id: string;
     season: number | null;
@@ -31,12 +31,12 @@ export interface Playlist {
     id: string;
     name: string;
     category_id: string;
+    thumbnail_url: string | null;
     youtube_playlist_id: string | null;
     is_live_sync: boolean;
     sort_order: number;
     created_at: string;
     video_count?: number;
-    season_count?: number;
 }
 
 export interface Category {
@@ -44,6 +44,11 @@ export interface Category {
     name: string;
     slug: string;
     sort_order: number;
+}
+
+export interface Season {
+    season: number;
+    videoCount: number;
 }
 
 export type PlayerState = "full" | "mini" | "closed";

@@ -4,17 +4,17 @@ export const roadmap: RoadmapPhase[] = [
     {
         phase: 1,
         title: "landing page",
-        status: "upcoming",
+        status: "shipped",
     },
     {
         phase: 2,
         title: "roadmap page",
-        status: "upcoming",
+        status: "shipped",
     },
     {
         phase: 3,
         title: "about page",
-        status: "upcoming",
+        status: "current",
     },
     {
         phase: 4,

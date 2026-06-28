@@ -5,6 +5,7 @@ import ComingSoon from "./pages/coming-soon";
 import RoadmapPage from "./pages/roadmap";
 import AboutPage from "./pages/about";
 import ScrollToTop from "./components/common/ScrollToTop";
+import CatalogPage from "./pages/catalog";
 
 export default function App() {
   return (
@@ -14,7 +15,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
 
         <Route element={<Layout />}>
-          <Route path="/catalog/*" element={<ComingSoon />} />
+          <Route path="/catalog/*" element={<CatalogPage />} />
           <Route path="/roadmap" element={<RoadmapPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<ComingSoon />} />

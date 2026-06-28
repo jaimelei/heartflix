@@ -138,21 +138,41 @@
 
 ## phase 12 — admin dashboard
 
-- [ ] 12.1 — create `api/auth.ts`: vercel serverless function; receives password in request body; compares against `ADMIN_PASSWORD` env var; returns `{ success: true/false }`; password never touches the client
-- [ ] 12.2 — create `api/fetch-video.ts`: receives YouTube URL/ID; calls YouTube Data API v3; returns `{ title_en, title_ko, duration, thumbnail_url, upload_date }`; requires `YOUTUBE_API_KEY` env var
+- [ ] 12.1 — create `api/auth.ts`: vercel serverless function; receives password in request body; compares against `ADMIN_PASSWORD` env var; returns `{ success: true/false }`; sets signed httpOnly session cookie; no supabase auth
+- [ ] 12.2 — create `api/fetch-video.ts`: receives YouTube URL/ID; calls YouTube Data API v3; returns `{ title_en, title_ko, duration, thumbnail_url, upload_date }`; requires `YOUTUBE_API_KEY`
 - [ ] 12.3 — create `api/fetch-playlist.ts`: receives YouTube playlist URL/ID; calls YouTube Data API v3; returns array of video metadata objects
-- [ ] 12.4 — create `api/ingest.ts`: receives video metadata + catalog metadata (category, playlist, season, member_tags); writes to supabase using service role key; requires `SUPABASE_SERVICE_ROLE_KEY` env var
-- [ ] 12.5 — create `api/sync.ts`: fetches all videos from live-sync playlists via YouTube API; upserts to supabase; shared logic for manual trigger and future cron
-- [ ] 12.6 — create `src/pages/admin/components/LoginForm.tsx`: centered password card; calls `/api/auth`; stores auth boolean in `sessionStorage` on success
-- [ ] 12.7 — create `src/pages/admin/components/IngestSingle.tsx`: YouTube URL input → calls `/api/fetch-video` → displays fetched metadata; form with category dropdown, playlist dropdown (or create new), optional season number, member tag checklist (8 checkboxes + "all members" toggle); save → calls `/api/ingest`
-- [ ] 12.8 — create `src/pages/admin/components/IngestPlaylist.tsx`: YouTube playlist URL → calls `/api/fetch-playlist` → displays all videos; bulk assign fields with per-video override toggles; save all button
-- [ ] 12.9 — create `src/pages/admin/components/VideoManager.tsx`: table of all videos with search bar and filter (by category/playlist/member); inline editing; delete with confirmation modal
-- [ ] 12.10 — create `src/pages/admin/components/PlaylistManager.tsx`: CRUD for playlists and categories; manual `sort_order` input
-- [ ] 12.11 — create `src/pages/admin/components/SyncPanel.tsx`: list of live-sync playlists; sync button per playlist calls `/api/sync`; last synced timestamp; status indicator
-- [ ] 12.12 — create `src/pages/admin/index.tsx`: login gate (renders `<LoginForm>` if not authed); tabbed interface (ingest / videos / playlists / sync)
-- [ ] 12.13 — update `src/App.tsx`: add `/admin` route inside `<Layout>`
-- [ ] 12.14 — add `ADMIN_PASSWORD`, `YOUTUBE_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY` to vercel environment variables
-- [ ] 12.15 — verify: `npm run build` passes; full ingestion flow end-to-end (paste URL → fetch metadata → assign catalog fields → save → confirm video appears in catalog); deploy to vercel
+- [ ] 12.4 — create `api/ingest.ts`: receives fetched metadata plus catalog metadata (`category`, `playlist`, `season`, `member_tags`); writes to Supabase using `SUPABASE_SERVICE_ROLE_KEY`
+- [ ] 12.5 — create `api/sync.ts`: query `h2h_playlists` where `sync_enabled = true`; fetch only the 3 most recent videos from each connected YouTube playlist; compare by `youtube_id`; insert only missing videos into `h2h_videos`; no scheduling logic (cron-job.org invokes this endpoint)
+
+- [ ] 12.6 — create `src/pages/admin/components/LoginForm.tsx`: centered password card; submits to `/api/auth`; access controlled via server session cookie
+
+- [ ] 12.7 — create `src/pages/admin/components/IngestSingle.tsx`: YouTube URL input → `/api/fetch-video`; display metadata preview; form with category dropdown, playlist dropdown, optional season, member checklist (8 members + "all members"); save → `/api/ingest`
+
+- [ ] 12.8 — create `src/pages/admin/components/IngestPlaylist.tsx`: YouTube playlist URL → `/api/fetch-playlist`; display all fetched videos; bulk assign category, playlist, season, member tags with optional per-video overrides; save all → `/api/ingest`
+
+- [ ] 12.9 — create `src/pages/admin/components/VideoManager.tsx`: searchable table of all videos; filter by category, playlist, member; inline edit metadata; delete with confirmation
+
+- [ ] 12.10 — create `src/pages/admin/components/PlaylistManager.tsx`: CRUD playlists and categories; manual `sort_order`; configure optional `youtube_playlist_id`; toggle `sync_enabled` (official playlists only)
+
+- [ ] 12.11 — create `src/pages/admin/index.tsx`: login gate (renders `<LoginForm />` until authenticated); tabbed interface (batch ingestion / single video / videos / playlists)
+
+- [ ] 12.12 — update `src/App.tsx`: add `/admin` route inside `<Layout>`
+
+- [ ] 12.13 — configure environment variables:
+  - `ADMIN_PASSWORD`
+  - `YOUTUBE_API_KEY`
+  - `SUPABASE_SERVICE_ROLE_KEY`
+
+- [ ] 12.14 — configure `cron-job.org` to call `/api/sync` on the desired schedule
+
+- [ ] 12.15 — verify:
+  - `npm run build`
+  - single video ingestion
+  - playlist ingestion
+  - playlist CRUD
+  - official playlist sync inserts only newly published videos
+  - music and variety playlists remain manual
+  - deploy to Vercel
 
 ---
 

@@ -1,14 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/layout/Layout";
-import HomePage from "./pages/landing-page";
-import ComingSoon from "./pages/coming-soon";
-import RoadmapPage from "./pages/roadmap";
-import AboutPage from "./pages/about";
 import ScrollToTop from "./components/common/ScrollToTop";
 
+import HomePage from "./pages/landing-page";
 import CatalogPage from "./pages/catalog";
 import PlaylistGrid from "./pages/catalog/components/PlaylistGrid";
 import PlaylistView from "./pages/catalog/components/PlaylistView";
+import AboutPage from "./pages/about";
+import RoadmapPage from "./pages/roadmap";
+import ComingSoon from "./pages/coming-soon";
+import AdminPage from "./pages/admin";
 
 export default function App() {
   return (
@@ -24,10 +25,16 @@ export default function App() {
             <Route index element={<PlaylistGrid />} />
 
             {/* Music */}
-            <Route path="music" element={<PlaylistGrid />} />
+            <Route
+              path="music"
+              element={<PlaylistGrid />}
+            />
 
             {/* Variety & Guestings */}
-            <Route path="variety" element={<PlaylistGrid />} />
+            <Route
+              path="variety"
+              element={<PlaylistGrid />}
+            />
 
             {/* Playlist */}
             <Route
@@ -36,9 +43,25 @@ export default function App() {
             />
           </Route>
 
-          <Route path="/roadmap" element={<RoadmapPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<ComingSoon />} />
+          <Route
+            path="/admin"
+            element={<AdminPage />}
+          />
+
+          <Route
+            path="/roadmap"
+            element={<RoadmapPage />}
+          />
+
+          <Route
+            path="/about"
+            element={<AboutPage />}
+          />
+
+          <Route
+            path="*"
+            element={<ComingSoon />}
+          />
         </Route>
       </Routes>
     </>

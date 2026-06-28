@@ -22,7 +22,6 @@ export interface Video {
     upload_date: string | null;
     playlist_id: string;
     season: number | null;
-    member_tags: string[];
     sort_order: number;
     created_at: string;
 }
@@ -33,10 +32,14 @@ export interface Playlist {
     category_id: string;
     thumbnail_url: string | null;
     youtube_playlist_id: string | null;
-    is_live_sync: boolean;
+    sync_enabled: boolean;
     sort_order: number;
     created_at: string;
     video_count?: number;
+
+    category?: {
+        name: string;
+    };
 }
 
 export interface Category {

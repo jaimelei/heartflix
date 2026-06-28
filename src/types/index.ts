@@ -53,9 +53,10 @@ export interface Season {
 
 export type PlayerState = "full" | "mini" | "closed";
 
-export interface PlayerContext {
+export interface VideoPlayerContextValue {
     state: PlayerState;
     currentVideo: Video | null;
+
     playVideo: (video: Video) => void;
     minimize: () => void;
     restore: () => void;

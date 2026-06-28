@@ -1,4 +1,4 @@
-import { href, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { SITE_TAGLINE, SOCIAL_LINKS, OFFICIAL_LINKS } from "../../constants";
 
 const NAV_LINKS = [

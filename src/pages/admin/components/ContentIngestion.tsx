@@ -103,7 +103,6 @@ export default function ContentIngestion() {
                 body: JSON.stringify({
                     videos: videos.map((video) => ({
                         ...video,
-                        category_id: selectedPlaylist.category_id,
                         playlist_id: playlistId,
                         season:
                             season === ""

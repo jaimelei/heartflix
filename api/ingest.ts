@@ -31,8 +31,6 @@ export default async function handler(
         duration: video.duration,
         thumbnail_url: video.thumbnail_url,
         upload_date: video.upload_date,
-
-        category_id: video.category_id,
         playlist_id: video.playlist_id,
         season: video.season ?? null,
     }));

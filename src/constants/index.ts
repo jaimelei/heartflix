@@ -2,7 +2,7 @@ export const SITE_NAME = "heartflix";
 
 export const SITE_TAGLINE = "every hearts2hearts video, one place";
 
-export const SITE_LAUNCH_DATE = "2026-06-26";
+export const SITE_LAUNCH_DATE = "2026-06-30";
 
 export const GROUP_NAME = "hearts2hearts";
 

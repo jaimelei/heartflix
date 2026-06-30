@@ -65,11 +65,39 @@ export default function PlaylistManager() {
 
         setSaving(true);
 
+        let youtubePlaylistId = form.youtube_playlist_id ? form.youtube_playlist_id.trim() : "";
+
+        // If sync is not enabled, force playlist ID to null
+        if (!form.sync_enabled) {
+            youtubePlaylistId = "";
+        } else if (youtubePlaylistId) {
+            // Extract playlist ID from URL if a URL was entered
+            try {
+                if (
+                    youtubePlaylistId.includes("youtube.com") ||
+                    youtubePlaylistId.includes("youtu.be") ||
+                    youtubePlaylistId.startsWith("http")
+                ) {
+                    // Try parsing as URL. If it lacks a protocol, prepend https://
+                    let urlString = youtubePlaylistId;
+                    if (!/^https?:\/\//i.test(urlString)) {
+                        urlString = "https://" + urlString;
+                    }
+                    const url = new URL(urlString);
+                    const listParam = url.searchParams.get("list");
+                    if (listParam) {
+                        youtubePlaylistId = listParam;
+                    }
+                }
+            } catch (e) {
+                // Fallback to the entered string if URL parsing fails
+            }
+        }
+
         const payload = {
             name: form.name,
             category_id: form.category_id,
-            youtube_playlist_id:
-                form.youtube_playlist_id || null,
+            youtube_playlist_id: youtubePlaylistId || null,
             sync_enabled: form.sync_enabled,
             sort_order: form.sort_order,
         };
@@ -206,7 +234,7 @@ export default function PlaylistManager() {
                 </select>
 
                 <input
-                    placeholder="YouTube Playlist ID"
+                    placeholder="YouTube Playlist URL or ID"
                     value={
                         form.youtube_playlist_id
                     }

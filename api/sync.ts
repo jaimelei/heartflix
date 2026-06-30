@@ -67,6 +67,7 @@ export default async function handler(
             const { data: existing } = await supabase
                 .from("h2h_videos")
                 .select("id")
+                .eq("playlist_id", playlist.id)
                 .eq("youtube_id", youtubeId)
                 .maybeSingle();
 

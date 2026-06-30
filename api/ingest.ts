@@ -38,7 +38,7 @@ export default async function handler(
     const { error } = await supabase
         .from("h2h_videos")
         .upsert(rows, {
-            onConflict: "youtube_id",
+            onConflict: "playlist_id,youtube_id",
             ignoreDuplicates: true,
         });
 

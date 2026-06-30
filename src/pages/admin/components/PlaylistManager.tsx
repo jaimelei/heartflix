@@ -75,14 +75,38 @@ export default function PlaylistManager() {
         };
 
         if (form.id) {
-            await supabase
-                .from("h2h_playlists")
-                .update(payload)
-                .eq("id", form.id);
+            const response = await fetch("/api/playlists", {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: form.id,
+                    ...payload,
+                }),
+            });
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                alert(errData.error || "Failed to update playlist.");
+                setSaving(false);
+                return;
+            }
         } else {
-            await supabase
-                .from("h2h_playlists")
-                .insert(payload);
+            const response = await fetch("/api/playlists", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                alert(errData.error || "Failed to create playlist.");
+                setSaving(false);
+                return;
+            }
         }
 
         await loadPlaylists();
@@ -101,13 +125,18 @@ export default function PlaylistManager() {
             return;
         }
 
-        const { error } = await supabase
-            .from("h2h_playlists")
-            .delete()
-            .eq("id", id);
+        const response = await fetch("/api/playlists", {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+        });
 
-        if (error) {
-            alert(error.message);
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            alert(errData.error || "Failed to delete playlist.");
             return;
         }
 

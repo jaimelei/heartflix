@@ -12,10 +12,16 @@ export default async function handler(
     req: VercelRequest,
     res: VercelResponse
 ) {
-    switch (req.method) {
-        case "GET":
-            return getPlaylists(res);
+    const authenticated =
+        req.cookies["admin-session"] === "authenticated";
 
+    if (!authenticated) {
+        return res.status(401).json({
+            error: "Unauthorized",
+        });
+    }
+
+    switch (req.method) {
         case "POST":
             return createPlaylist(req, res);
 
@@ -30,31 +36,6 @@ export default async function handler(
                 error: "Method not allowed.",
             });
     }
-}
-
-async function getPlaylists(
-    res: VercelResponse
-) {
-    const { data, error } = await supabase
-        .from("h2h_playlists")
-        .select(`
-            *,
-            category:h2h_categories (
-                id,
-                name
-            )
-        `)
-        .order("sort_order", {
-            ascending: true,
-        });
-
-    if (error) {
-        return res.status(500).json({
-            error: error.message,
-        });
-    }
-
-    return res.status(200).json(data);
 }
 
 async function createPlaylist(

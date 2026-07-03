@@ -180,7 +180,7 @@ export default function PlaylistGrid() {
     }
 
     return (
-        <div style={{ maxWidth: "85%", margin: "0 auto", paddingTop: "2rem", paddingBottom: "2rem" }}>
+        <div style={{ maxWidth: "80%", margin: "0 auto", paddingTop: "2rem", paddingBottom: "2rem" }}>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {loading
                     ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)

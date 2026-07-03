@@ -66,6 +66,12 @@
   --radius-2xl: 32px;
   --radius-full: 9999px;
 
+  /* Glass-morphism */
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-bg-strong: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.30);
+  --glass-blur: blur(16px);
+
   /* Shadows */
   --shadow-sm: 0 1px 2px var(--color-shadow);
   --shadow-md: 0 4px 12px var(--color-shadow);

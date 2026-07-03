@@ -50,8 +50,8 @@ export function useVideos(
                 query = query.eq("season", season);
             }
 
-            const { data, error } = await query.order("sort_order", {
-                ascending: true,
+            const { data, error } = await query.order("upload_date", {
+                ascending: false,
             });
 
             if (error) {

@@ -4,23 +4,51 @@ import Reveal from "../../../components/ui/Reveal";
 import { usePlaylists } from "../../../hooks/usePlaylists";
 import type { Playlist } from "../../../types";
 
+const CATEGORY_ACCENTS: Record<string, string> = {
+    "official-content": "#7EC8E3",
+    music: "#C3B1E1",
+    variety: "#A8E6CF",
+};
+
+// ─── perforated tear-line ─────────────────────────────────────────────────────
+function Perforation() {
+    return (
+        <div
+            aria-hidden="true"
+            style={{
+                height: "14px",
+                flexShrink: 0,
+                backgroundImage:
+                    "radial-gradient(circle at 10px 7px, transparent 5.5px, var(--color-surface) 6px)",
+                backgroundSize: "18px 14px",
+                backgroundRepeat: "repeat-x",
+            }}
+        />
+    );
+}
+
 // ─── shimmer skeleton ─────────────────────────────────────────────────────────
 
 function SkeletonCard() {
     return (
-        <div
-            className="rounded-xl overflow-hidden"
-            style={{
-                background: "var(--color-surface)",
-                border: "1px solid var(--color-border)",
-                boxShadow: "var(--shadow-card)",
-            }}
-        >
+        <div style={{ display: "flex", flexDirection: "column" }}>
             <div
-                className="h-[140px] animate-pulse"
-                style={{ background: "var(--color-bg-alt)" }}
+                className="animate-pulse"
+                style={{
+                    height: "150px",
+                    borderRadius: "18px 18px 0 0",
+                    background: "var(--color-bg-alt)",
+                }}
             />
-            <div className="p-4 flex flex-col gap-2">
+            <Perforation />
+            <div
+                className="flex flex-col gap-2"
+                style={{
+                    background: "var(--color-surface)",
+                    borderRadius: "0 0 18px 18px",
+                    padding: "12px 16px 16px",
+                }}
+            >
                 <div
                     className="h-4 rounded-full animate-pulse"
                     style={{ background: "var(--color-bg-alt)", width: "70%" }}
@@ -43,34 +71,71 @@ interface PlaylistCardProps {
 }
 
 function PlaylistCard({ playlist, index, categorySlug }: PlaylistCardProps) {
-    const [hovered, setHovered] = useState(false);
+    const [active, setActive] = useState(false); // true on hover OR keyboard focus
     const navigate = useNavigate();
 
+    // Respect prefers-reduced-motion: keep the shadow/color feedback, drop the
+    // lift, tilt, and scale.
+    const [prefersReducedMotion] = useState(() => {
+        if (typeof window === "undefined" || !window.matchMedia) return false;
+        try {
+            return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        } catch {
+            return false;
+        }
+    });
+
     const hasThumbnail = !!playlist.thumbnail_url;
+    const accent = CATEGORY_ACCENTS[categorySlug] ?? CATEGORY_ACCENTS["official-content"];
 
     const handleClick = () => {
         navigate(`/catalog/${categorySlug}/${playlist.id}`);
     };
 
+    const motionOn = active && !prefersReducedMotion;
+
     return (
         <Reveal direction="up" delay={index * 60}>
             <div
-                className="rounded-xl overflow-hidden cursor-pointer"
-                style={{
-                    background: "var(--color-surface)",
-                    border: `1px solid ${hovered ? "var(--color-border-accent)" : "var(--color-border)"}`,
-                    boxShadow: hovered ? "var(--shadow-lg)" : "var(--shadow-card)",
-                    transform: hovered ? "translateY(-4px)" : "translateY(0)",
-                    transition: "all 300ms ease-out",
-                }}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open playlist ${playlist.name}`}
                 onClick={handleClick}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleClick();
+                    }
+                }}
+                onMouseEnter={() => setActive(true)}
+                onMouseLeave={() => setActive(false)}
+                onFocus={() => setActive(true)}
+                onBlur={() => setActive(false)}
+                style={{
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: motionOn ? "6px" : "0px",
+                    borderRadius: "18px",
+                    cursor: "pointer",
+                    outline: "none",
+                    boxShadow: active ? `7px 7px 0px 0px ${accent}` : `4px 4px 0px 0px ${accent}`,
+                    transform: motionOn
+                        ? "translate(-3px, -3px) rotate(-1.2deg)"
+                        : "translate(0px, 0px) rotate(0deg)",
+                    transition:
+                        "gap 260ms ease-out, box-shadow 260ms ease-out, transform 260ms ease-out",
+                }}
             >
-                {/* thumbnail region */}
+                {/* thumbnail */}
                 <div
-                    className="relative overflow-hidden"
-                    style={{ height: "140px", background: "var(--color-bg-alt)" }}
+                    style={{
+                        position: "relative",
+                        height: "180px",
+                        overflow: "hidden",
+                        borderRadius: "18px 18px 0 0",
+                        background: "var(--color-surface)",
+                    }}
                 >
                     {hasThumbnail ? (
                         <img
@@ -78,73 +143,86 @@ function PlaylistCard({ playlist, index, categorySlug }: PlaylistCardProps) {
                             alt={playlist.name}
                             className="w-full h-full object-cover"
                             style={{
-                                transform: hovered ? "scale(1.05)" : "scale(1)",
-                                transition: "transform 700ms ease-out",
+                                filter: active
+                                    ? "saturate(1.15) brightness(1.02)"
+                                    : "saturate(0.82) brightness(0.98)",
+                                transform: motionOn ? "scale(1.04)" : "scale(1)",
+                                transition: "filter 420ms ease-out, transform 420ms ease-out",
                             }}
                         />
                     ) : (
-                        // gradient placeholder
                         <div
                             className="w-full h-full flex items-center justify-center"
                             style={{
-                                background:
-                                    "linear-gradient(135deg, var(--color-primary-soft), var(--color-bg-alt))",
+                                background: `linear-gradient(135deg, ${accent}33, var(--color-bg-alt))`,
                             }}
                         >
-                            <svg
-                                width="32"
-                                height="32"
-                                viewBox="0 0 32 32"
-                                fill="none"
-                                aria-hidden="true"
-                                style={{ opacity: 0.4 }}
+                            <div
+                                style={{
+                                    width: "42px",
+                                    height: "42px",
+                                    borderRadius: "50%",
+                                    border: `2px dashed ${accent}`,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
                             >
-                                <rect x="2" y="6" width="28" height="20" rx="3" stroke="var(--color-primary)" strokeWidth="2" />
-                                <path d="M13 11l8 5-8 5V11z" fill="var(--color-primary)" />
-                            </svg>
+                                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                                    <path d="M4 2l8 5-8 5V2z" fill={accent} />
+                                </svg>
+                            </div>
                         </div>
                     )}
-
-                    {/* subtle bottom fade */}
-                    <div
-                        className="absolute inset-x-0 bottom-0 h-8 pointer-events-none"
-                        style={{
-                            background:
-                                "linear-gradient(to top, var(--color-surface), transparent)",
-                        }}
-                    />
                 </div>
 
-                {/* card body */}
-                <div className="p-4 flex items-start justify-between gap-3">
-                    <p
-                        className="leading-snug"
-                        style={{
-                            fontFamily: '"Fredoka", sans-serif',
-                            fontWeight: 600,
-                            fontSize: "1rem",
-                            color: "var(--color-text-heading)",
-                        }}
-                    >
-                        {playlist.name}
-                    </p>
+                <Perforation />
 
-                    {playlist.video_count !== undefined && (
-                        <span
-                            className="shrink-0 rounded-full"
+                {/* info panel */}
+                <div
+                    style={{
+                        background: "var(--color-surface)",
+                        borderRadius: "0 0 18px 18px",
+                        padding: "12px 16px 16px",
+                    }}
+                >
+                    <div className="flex items-start justify-between gap-3">
+                        <p
                             style={{
                                 fontFamily: '"Fredoka", sans-serif',
-                                fontWeight: 500,
-                                fontSize: "0.75rem",
-                                background: "var(--color-primary-muted)",
-                                color: "var(--color-primary-deep)",
-                                padding: "2px 10px",
-                                whiteSpace: "nowrap",
+                                fontWeight: 600,
+                                fontSize: "1rem",
+                                lineHeight: 1.3,
+                                color: "var(--color-text-heading)",
+                                display: "-webkit-box",
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
                             }}
                         >
-                            {playlist.video_count} videos
-                        </span>
-                    )}
+                            {playlist.name}
+                        </p>
+
+                        {playlist.video_count !== undefined && (
+                            <span
+                                className="shrink-0"
+                                style={{
+                                    fontFamily: '"Fredoka", sans-serif',
+                                    fontWeight: 500,
+                                    fontSize: "0.7rem",
+                                    color: "var(--color-text-secondary)",
+                                    background: `${accent}30`,
+                                    borderRadius: "999px",
+                                    padding: "3px 10px",
+                                    whiteSpace: "nowrap",
+                                    transform: "rotate(-4deg)",
+                                    marginTop: "2px",
+                                }}
+                            >
+                                {playlist.video_count} videos
+                            </span>
+                        )}
+                    </div>
                 </div>
             </div>
         </Reveal>

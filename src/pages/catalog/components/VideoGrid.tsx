@@ -1,25 +1,33 @@
 import { useParams, useNavigate } from "react-router-dom";
 import VideoCard from "../../../components/ui/VideoCard";
+import Perforation from "../../../components/ui/Perforation";
 import { useVideos } from "../../../hooks/useVideos";
 import { useVideoPlayer } from "../../../hooks/useVideoPlayer";
 
 // ─── shimmer skeleton ─────────────────────────────────────────────────────────
+// Mirrors the ticket-stub silhouette (image / tear-line / label) so loading
+// and loaded states share the same shape.
 
 function SkeletonCard() {
     return (
-        <div
-            className="rounded-xl overflow-hidden"
-            style={{
-                background: "var(--color-surface)",
-                border: "1px solid var(--color-border)",
-                boxShadow: "var(--shadow-card)",
-            }}
-        >
+        <div style={{ display: "flex", flexDirection: "column" }}>
             <div
                 className="animate-pulse"
-                style={{ height: "160px", background: "var(--color-bg-alt)" }}
+                style={{
+                    height: "160px",
+                    borderRadius: "18px 18px 0 0",
+                    background: "var(--color-bg-alt)",
+                }}
             />
-            <div className="p-4 flex flex-col gap-2">
+            <Perforation />
+            <div
+                className="flex flex-col gap-2"
+                style={{
+                    background: "var(--color-surface)",
+                    borderRadius: "0 0 18px 18px",
+                    padding: "12px 16px 16px",
+                }}
+            >
                 <div
                     className="h-4 rounded-full animate-pulse"
                     style={{ background: "var(--color-bg-alt)", width: "85%" }}
@@ -165,6 +173,7 @@ export default function VideoGrid() {
                             key={video.id}
                             video={video}
                             index={index}
+                            categorySlug={categorySlug ?? "official-content"}
                             onClick={playVideo}
                         />
                     ))}

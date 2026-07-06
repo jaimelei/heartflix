@@ -1,31 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Reveal from "../../../components/ui/Reveal";
+import Perforation from "../../../components/ui/Perforation";
+import { CATEGORY_ACCENTS } from "../../../components/ui/catalogAccents";
 import { usePlaylists } from "../../../hooks/usePlaylists";
 import type { Playlist } from "../../../types";
-
-const CATEGORY_ACCENTS: Record<string, string> = {
-    "official-content": "#7EC8E3",
-    music: "#C3B1E1",
-    variety: "#A8E6CF",
-};
-
-// ─── perforated tear-line ─────────────────────────────────────────────────────
-function Perforation() {
-    return (
-        <div
-            aria-hidden="true"
-            style={{
-                height: "14px",
-                flexShrink: 0,
-                backgroundImage:
-                    "radial-gradient(circle at 10px 7px, transparent 5.5px, var(--color-surface) 6px)",
-                backgroundSize: "18px 14px",
-                backgroundRepeat: "repeat-x",
-            }}
-        />
-    );
-}
 
 // ─── shimmer skeleton ─────────────────────────────────────────────────────────
 

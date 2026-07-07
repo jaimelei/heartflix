@@ -7,7 +7,7 @@ import type { Video } from "../../types";
 interface VideoCardProps {
     video: Video;
     index: number;
-    categorySlug: string;
+    categorySlug?: string;
     onClick?: (video: Video) => void;
 }
 
@@ -25,7 +25,7 @@ export default function VideoCard({ video, index, categorySlug, onClick }: Video
         }
     });
 
-    const accent = CATEGORY_ACCENTS[categorySlug] ?? CATEGORY_ACCENTS["official-content"];
+    const accent = (categorySlug && CATEGORY_ACCENTS[categorySlug]) ?? CATEGORY_ACCENTS["official-content"];
     const motionOn = active && !prefersReducedMotion;
 
     return (

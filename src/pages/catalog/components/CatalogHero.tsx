@@ -247,7 +247,12 @@ export default function CatalogHero() {
                 <Reveal direction="up" delay={150}>
                     <div className="flex flex-col gap-2.5 w-full">
                         {CATEGORY_PANELS.map((panel) => {
-                            const isActive = location.pathname.startsWith(panel.path);
+                            const isActive =
+                                panel.path === "/catalog"
+                                    ? location.pathname === "/catalog" ||
+                                    location.pathname.startsWith("/catalog/official-content/")
+                                    : location.pathname === panel.path ||
+                                    location.pathname.startsWith(`${panel.path}/`);
                             const count = countBySlug[panel.slug] ?? 0;
 
                             return (
